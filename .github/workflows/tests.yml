@@ -22,7 +22,21 @@ jobs:
     name: Binaries for Windows (i686-pc-mingw64)
     runs-on: windows-latest
 
+  strategy:
+    matrix:
+      include:
+        - { sys: mingw64, env: x86_64 }
+        - { sys: mingw32, env: i686 }
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          install: mingw-w64-${{matrix.env}}-openssl
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -30,20 +44,17 @@ jobs:
       - name: Fix Checkout
         run: |
           git fetch --force --tags
+
       - name: Configure and Build
-        shell: bash
         run: |
           export FIXME='happynet3.0.0'
-          export AR='ar --target=pe-i386'
           export AR='ar'
-          export CFLAGS='-m32 '
-          export LDFLAGS='-m32 '
           source scripts/hack_fakeautoconf.sh
           make
+
       - name: Create binary dir
-        shell: bash
         run: |
-          make install DESTDIR=binaries/i686-pc-mingw64
+          make install DESTDIR=binaries/{{matrix.env}}
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
