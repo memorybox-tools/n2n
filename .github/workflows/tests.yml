@@ -115,59 +115,6 @@ jobs:
           path: binaries
 
 
-  binaries_linux_crosscompile:
-    name: Binaries for linux
-    needs:
-      - test_linux
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        arch:
-          - arm-linux-gnueabi
-
-          # I assume these architectures produce working code, but this has
-          # not been directly confirmed.
-          # They are compiled dynamically against normal libc, so will not
-          # work on openwrt.
-          - aarch64-linux-gnu
-          - mips-linux-gnu
-          - mipsel-linux-gnu
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Fix Checkout
-        run: |
-          git fetch --force --tags
-
-      - name: Install cross compiler
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            binutils-${{ matrix.arch }} \
-            gcc-${{ matrix.arch }}
-
-      - name: Configure and Build
-        shell: bash
-        run: |
-          ./autogen.sh
-          export CC=${{ matrix.arch }}-gcc
-          export AR=${{ matrix.arch }}-ar
-          ./configure --host ${{ matrix.arch }}
-          make
-
-      - name: Create binary dir
-        shell: bash
-        run: |
-          make install DESTDIR=binaries/${{ matrix.arch }}
-
-      - name: Upload binary artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: binaries
-          path: binaries
-
   # Given the clearly documented use of annotated tags to signal releases,
   # it seems strange that there is no simple way to trigger actions if the
   # tag is annotated.  So we need to jump through some extra hoops.
