@@ -73,40 +73,59 @@ jobs:
       - name: Upload data to codecov
         uses: codecov/codecov-action@v2
 
-  binaries_windows:
-    name: Binaries for Windows
+  binaries_window_64:
+    name: Binaries for Windows (x86_64-pc-mingw64)
     needs:
       - test_windows
     runs-on: windows-latest
 
-    strategy:
-      fail-fast: true
-      matrix:
-        arch:
-          - x86_64-w64-mingw32-
-          - i686-w64-mingw32-
-
-
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Fix Checkout
         run: |
           git fetch --force --tags
-
       - name: Configure and Build
         shell: bash
         run: |
-          export FIXME='happynet3.0.0'
-          export CC=${{ matrix.arch }}-gcc
-          export AR=${{ matrix.arch }}-ar
           ./scripts/hack_fakeautoconf.sh
           make
-
       - name: Create binary dir
         shell: bash
         run: |
-          make install DESTDIR=binaries/${{ matrix.arch }}
+          make install DESTDIR=binaries/x86_64-pc-mingw64
+
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: binaries
+
+  binaries_window_32:
+    name: Binaries for Windows (i686-pc-mingw64)
+    needs:
+      - test_windows
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Fix Checkout
+        run: |
+          git fetch --force --tags
+      - name: Configure and Build
+        shell: bash
+        run: |
+          export CFLAGS='-m 32 ' && ./scripts/hack_fakeautoconf.sh
+          make
+      - name: Create binary dir
+        shell: bash
+        run: |
+          make install DESTDIR=binaries/i686-pc-mingw64
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
@@ -130,7 +149,8 @@ jobs:
     name: Upload Release Assets
     if: startsWith(github.ref, 'refs/tags/')
     needs:
-      - binaries_windows
+      - binaries_windows_64
+      - binaries_windows_32
     runs-on: ubuntu-latest
 
     steps:
