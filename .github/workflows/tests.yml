@@ -73,7 +73,7 @@ jobs:
       - name: Upload data to codecov
         uses: codecov/codecov-action@v2
 
-  binaries_window_64:
+  binaries_windows_64:
     name: Binaries for Windows (x86_64-pc-mingw64)
     needs:
       - test_windows
@@ -103,7 +103,7 @@ jobs:
           name: binaries
           path: binaries
 
-  binaries_window_32:
+  binaries_windows_32:
     name: Binaries for Windows (i686-pc-mingw64)
     needs:
       - test_windows
