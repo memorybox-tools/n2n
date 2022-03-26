@@ -36,7 +36,8 @@ jobs:
       - name: generate a makefile and use it to install more packages
         run: |
           # This is a pretty big hammer, but gets the windows compile moving
-          ./scripts/hack_fakeautoconf.sh
+          export AR='ar'
+          source ./scripts/hack_fakeautoconf.sh
           make build-dep
         shell: bash
 
@@ -44,7 +45,8 @@ jobs:
         run: |
           export CFLAGS="-fprofile-arcs -ftest-coverage"
           export LDFLAGS="--coverage"
-          ./scripts/hack_fakeautoconf.sh
+          export AR='ar --target=pe-i386'
+          source ./scripts/hack_fakeautoconf.sh
         shell: bash
 
       - name: Run embedded tests
@@ -90,7 +92,8 @@ jobs:
       - name: Configure and Build
         shell: bash
         run: |
-          ./scripts/hack_fakeautoconf.sh
+          export AR='ar'
+          source ./scripts/hack_fakeautoconf.sh
           make
       - name: Create binary dir
         shell: bash
