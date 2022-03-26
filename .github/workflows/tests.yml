@@ -98,7 +98,6 @@ jobs:
         shell: bash
         run: |
           export FIXME=happynet3.0.0
-          export GIT_COMMITS=${{ git --version }}
           export CC=${{ matrix.arch }}-gcc
           export AR=${{ matrix.arch }}-ar
           ./scripts/hack_fakeautoconf.sh
