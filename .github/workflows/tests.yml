@@ -27,6 +27,7 @@ jobs:
           msystem: ${{matrix.sys}}
           install: >-
             git
+            make
             mingw-w64-${{matrix.env}}-openssl
 
       - uses: actions/checkout@v2
