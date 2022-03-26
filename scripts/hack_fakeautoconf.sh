@@ -4,7 +4,6 @@
 # like boiling the ocean.
 
 GIT_COMMITS=GIT_COMMITS=`git rev-list --count HEAD`
-FIXME=happynet3.0.0
 
 sed \
     -e "s%@N2N_VERSION_SHORT@%FIXME%g" \
