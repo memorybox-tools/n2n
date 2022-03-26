@@ -9,7 +9,7 @@ sed \
     -e "s%@N2N_VERSION_SHORT@%FIXME%g" \
     -e "s%@GIT_COMMITS@%$GIT_COMMITS%g" \
     -e "s%@CC@%gcc%g" \
-    -e "s%@AR@%ar%g" \
+    -e "s%@AR@%$AR%g" \
     -e "s%@CFLAGS@%$CFLAGS%g" \
     -e "s%@LDFLAGS@%$LDFLAGS%g" \
     -e "s%@N2N_LIBS@%$LDLIBS%g" \
