@@ -3,9 +3,11 @@
 # Specifically for windows, where installing autoconf looks suspiciously
 # like boiling the ocean.
 
+GIT_COMMITS=GIT_COMMITS=`git rev-list --count HEAD`
+
 sed \
     -e "s%@N2N_VERSION_SHORT@%FIXME%g" \
-    -e "s%@GIT_COMMITS@%FIXME%g" \
+    -e "s%@GIT_COMMITS@%$GIT_COMMITS%g" \
     -e "s%@CC@%gcc%g" \
     -e "s%@AR@%ar%g" \
     -e "s%@CFLAGS@%$CFLAGS%g" \
