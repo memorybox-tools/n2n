@@ -7,26 +7,16 @@ on:
   pull_request:
 
 jobs:
-  smoketest:
-    name: Smoke test
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run minimal test set
-        run: |
-          ./autogen.sh
-
 
   binaries_windows_32:
     name: Binaries for Windows (i686-pc-mingw64)
     runs-on: windows-latest
 
-  strategy:
-    matrix:
-      include:
-        - { sys: mingw64, env: x86_64 }
-        - { sys: mingw32, env: i686 }
+    strategy:
+      matrix:
+        include:
+          - { sys: mingw64, env: x86_64 }
+          - { sys: mingw32, env: i686 }
     defaults:
       run:
         shell: msys2 {0}
