@@ -25,14 +25,15 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{matrix.sys}}
-          install: mingw-w64-${{matrix.env}}-openssl
+          install: >-
+            git
+            mingw-w64-${{matrix.env}}-openssl
 
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       - name: Fix Checkout
-        shell: bash
         run: |
           git fetch --force --tags
 
