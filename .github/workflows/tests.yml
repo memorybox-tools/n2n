@@ -32,6 +32,7 @@ jobs:
           fetch-depth: 0
 
       - name: Fix Checkout
+        shell: bash
         run: |
           git fetch --force --tags
 
