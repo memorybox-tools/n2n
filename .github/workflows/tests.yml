@@ -120,7 +120,7 @@ jobs:
       - name: Configure and Build
         shell: bash
         run: |
-          export CFLAGS='-m 32 ' && ./scripts/hack_fakeautoconf.sh
+          export CFLAGS='-m32 ' && ./scripts/hack_fakeautoconf.sh
           make
       - name: Create binary dir
         shell: bash
