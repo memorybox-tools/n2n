@@ -16,34 +16,10 @@ jobs:
       - name: Run minimal test set
         run: |
           ./autogen.sh
-          ./configure
-          make test
-
-  test_windows:
-    needs: smoketest
-    name: Test Windows
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: true
-      matrix:
-        os:
-          - windows-2019
-          - windows-2022
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: generate a makefile and use it to install more packages
-        run: |
-          # This is a pretty big hammer, but gets the windows compile moving
-          export AR='ar'
-        shell: bash
 
 
   binaries_windows_32:
     name: Binaries for Windows (i686-pc-mingw64)
-    needs:
-      - test_windows
     runs-on: windows-latest
 
     steps:
