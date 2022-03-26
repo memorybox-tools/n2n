@@ -97,7 +97,7 @@ jobs:
       - name: Configure and Build
         shell: bash
         run: |
-          export FIXME=happynet3.0.0
+          export FIXME='happynet3.0.0'
           export CC=${{ matrix.arch }}-gcc
           export AR=${{ matrix.arch }}-ar
           ./scripts/hack_fakeautoconf.sh
