@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  binaries_windows_32:
+  binaries_windows:
     name: Binaries for Windows
     runs-on: windows-latest
 
@@ -41,13 +41,12 @@ jobs:
 
       - name: Configure and Build
         run: |
-          export FIXME='happynet3.0.0'
           source scripts/hack_fakeautoconf.sh
           make
 
       - name: Create binary dir
         run: |
-          make install DESTDIR=binaries/${{matrix.env}}
+          make install DESTDIR=binaries/${{ matrix.env }}
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
@@ -71,7 +70,7 @@ jobs:
     name: Upload Release Assets
     if: startsWith(github.ref, 'refs/tags/')
     needs:
-      - binaries_windows_32
+      - binaries_windows
     runs-on: ubuntu-latest
 
     steps:
