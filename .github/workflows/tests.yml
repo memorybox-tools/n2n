@@ -42,13 +42,12 @@ jobs:
       - name: Configure and Build
         run: |
           export FIXME='happynet3.0.0'
-          export AR='ar'
           source scripts/hack_fakeautoconf.sh
           make
 
       - name: Create binary dir
         run: |
-          make install DESTDIR=binaries/{{matrix.env}}
+          make install DESTDIR=binaries/${{matrix.env}}
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
