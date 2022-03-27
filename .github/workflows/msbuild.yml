@@ -16,9 +16,9 @@ jobs:
       matrix:
         arch: [x86, x64]
 
-      include:
-        # Prettier run names.
-        - {os: windows-2016, name: VS 2017}
+        include:
+          # Prettier run names.
+          - {os: windows-2016, name: VS 2017}
 
     defaults:
       run:
