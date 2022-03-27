@@ -9,14 +9,13 @@ on:
 jobs:
 
   binaries_windows_32:
-    name: Binaries for Windows (i686-pc-mingw64)
+    name: Binaries for Windows
     runs-on: windows-latest
 
     strategy:
       matrix:
         include:
           - { sys: mingw64, env: x86_64 }
-          - { sys: mingw32, env: i686 }
     defaults:
       run:
         shell: msys2 {0}
