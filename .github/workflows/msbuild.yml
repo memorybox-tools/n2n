@@ -39,13 +39,13 @@ jobs:
 
       - name: Configure and Build
         run: |
-          mkdir {{ matrix.arch }}
-          cd {{ matrix.arch }}
+          mkdir ${{ matrix.arch }}
+          cd ${{ matrix.arch }}
           cmake.exe -G "Visual Studio 15 2017" -A Win32 -S ..  -B .
 
       - name: Create binary dir
         run: |
-          make install DESTDIR=binaries/${{ matrix.arch}}
+          DESTDIR=binaries/${{ matrix.arch }}
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
