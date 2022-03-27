@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        arch: [x86, x64]
+        arch: [Win32, x64]
 
         include:
           # Prettier run names.
@@ -41,11 +41,12 @@ jobs:
         run: |
           mkdir ${{ matrix.arch }}
           cd ${{ matrix.arch }}
-          cmake.exe -G "Visual Studio 15 2017" -A Win32 -S ..  -B .
+          cmake.exe -G "Visual Studio 15 2017" -A ${{ matrix.arch }} -S ..  -B .
 
       - name: Create binary dir
         run: |
-          DESTDIR=binaries/${{ matrix.arch }}
+          mkdir binaries
+          cp -r ${{ matrix.arch }} binaries/
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
