@@ -21,7 +21,7 @@ sed \
     < tools/Makefile.in > tools/Makefile
 
 cat <<EOF >include/config.h
-#define PACKAGE_VERSION $N2N_VERSION_SHORT
+#define PACKAGE_VERSION "$N2N_VERSION_SHORT"
 #define PACKAGE_OSNAME "Windows"
-#define GIT_RELEASE $N2N_VERSION_SHORT
+#define GIT_RELEASE "${N2N_VERSION_SHORT}.r${GIT_COMMITS}"
 EOF
