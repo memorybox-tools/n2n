@@ -117,7 +117,8 @@ jobs:
     name: Upload Release Assets
     if: startsWith(github.ref, 'refs/tags/')
     needs:
-      - binaries_windows
+      - binaries_windows_x64
+      - binaries_windows_x86
     runs-on: ubuntu-latest
 
     steps:
