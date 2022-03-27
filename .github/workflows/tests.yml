@@ -8,15 +8,14 @@ on:
 
 jobs:
 
-  binaries_windows:
+  binaries_windows_x64:
     name: Binaries for Windows
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     strategy:
       matrix:
         include:
           - { sys: mingw64, env: x86_64 }
-          - { sys: mingw32, env: i686 }
     defaults:
       run:
         shell: msys2 {0}
@@ -30,6 +29,53 @@ jobs:
             make
             base-devel
             mingw-w64-${{matrix.env}}-toolchain
+            mingw-w64-${{matrix.env}}-openssl
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Fix Checkout
+        run: |
+          git fetch --force --tags
+
+      - name: Configure and Build
+        run: |
+          source scripts/hack_fakeautoconf.sh
+          make
+
+      - name: Create binary dir
+        run: |
+          make install DESTDIR=binaries/${{ matrix.env }}
+
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: binaries
+
+
+  binaries_windows_x86:
+    name: Binaries for Windows
+    runs-on: windows-2019
+
+    strategy:
+      matrix:
+        include:
+          - { sys: mingw32, env: i686 }
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          install: >-
+            git
+            make
+            base-devel
+            mingw-w32-${{matrix.env}}-toolchain
             mingw-w32-${{matrix.env}}-openssl
 
       - uses: actions/checkout@v2
