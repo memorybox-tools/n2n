@@ -75,8 +75,8 @@ jobs:
             git
             make
             base-devel
-            mingw-w32-${{matrix.env}}-toolchain
-            mingw-w32-${{matrix.env}}-openssl
+            mingw-w64-${{matrix.env}}-toolchain
+            mingw-w64-${{matrix.env}}-openssl
 
       - uses: actions/checkout@v2
         with:
