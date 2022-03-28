@@ -10,7 +10,7 @@ jobs:
 
   binaries_windows:
     name: Binaries for Windows
-    runs-on: windows-2016
+    runs-on: windows-2019
 
     strategy:
       matrix:
@@ -18,7 +18,7 @@ jobs:
 
         include:
           # Prettier run names.
-          - {os: windows-2016, name: VS 2017}
+          - {os: windows-2019, name: VS 2019}
 
     defaults:
       run:
@@ -41,7 +41,7 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          cmake.exe -G "Visual Studio 15 2017" -A ${{ matrix.arch }} -S ..  -B .
+          cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S ..  -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe supernode.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe n2n-benchmark.vcxproj /t:Build /p:Configuration=Release
