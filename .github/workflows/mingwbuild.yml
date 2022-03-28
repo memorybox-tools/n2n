@@ -149,5 +149,4 @@ jobs:
         with:
           prerelease: true
           files: |
-            artifacts/packages-dpkg/*.deb
-            artifacts/packages-rpm/*.rpm
+            artifacts/*
