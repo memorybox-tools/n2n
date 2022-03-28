@@ -45,6 +45,7 @@ jobs:
           echo 'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' >> toolChain.cmake
           echo 'set(CMAKE_C_FLAGS_DEBUG "/MTd")' >> toolChain.cmake
           echo 'set(CMAKE_CXX_FLAGS_DEBUG "/MTd")' >> toolChain.cmake
+          echo 'option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)' >> toolChain.cmake
           cat toolChain.cmake
           cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S .. -DCMAKE_TOOLCHAIN_FILE=./toolChain.cmake -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
