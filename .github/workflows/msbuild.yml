@@ -10,7 +10,6 @@ jobs:
 
   binaries_windows:
     name: Binaries for Windows
-    runs-on: windows-2016
 
     strategy:
       matrix:
@@ -18,7 +17,7 @@ jobs:
 
         include:
           # Prettier run names.
-          - {os: windows-2016, name: VS 2017}
+          - {os: windows-2019, name: VS 2017}
 
     defaults:
       run:
