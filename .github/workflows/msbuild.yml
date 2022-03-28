@@ -10,6 +10,7 @@ jobs:
 
   binaries_windows:
     name: Binaries for Windows
+    runs-on: windows-2019
 
     strategy:
       matrix:
