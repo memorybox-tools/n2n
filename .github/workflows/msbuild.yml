@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure and Build
         run: |
-          if not exist "${{ matrix.arch }}" mkdir ${{ matrix.arch }}
+          New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
           cmake.exe -G "Visual Studio 15 2017" -A ${{ matrix.arch }} -S ..  -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
