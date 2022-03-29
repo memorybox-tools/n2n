@@ -16,7 +16,7 @@ jobs:
       - name: Run minimal test set
         run: |
           ./autogen.sh
-          ./configure LDFLAGS="-static"
+          ./configure
           make test
 
   lint:
