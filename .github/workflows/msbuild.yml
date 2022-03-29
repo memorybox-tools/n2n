@@ -41,9 +41,9 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          echo 'set(CMAKE_CXX_FLAGS_RELEASE "${/MT")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_CXX_FLAGS_DEBUG "${/MTd")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_C_FLAGS_RELEASE "$/MT")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_CXX_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_C_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
           echo 'set(CMAKE_C_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
           cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S .. -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
@@ -95,9 +95,9 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          echo 'set(CMAKE_CXX_FLAGS_RELEASE "${/MT")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_CXX_FLAGS_DEBUG "${/MTd")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_C_FLAGS_RELEASE "$/MT")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_CXX_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
+          echo 'set(CMAKE_C_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
           echo 'set(CMAKE_C_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
           cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
