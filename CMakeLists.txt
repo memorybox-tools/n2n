@@ -105,8 +105,6 @@ endif(DEFINED UNIX)
 INCLUDE_DIRECTORIES(.)
 INCLUDE_DIRECTORIES(include)
 if(DEFINED WIN32)
-set(CMAKE_C_FLAGS_RELEASE "/MT")
-set(CMAKE_CXX_FLAGS_RELEASE "/MT")
   INCLUDE_DIRECTORIES(win32)
 #  Customize include.
 #  INCLUDE_DIRECTORIES("D:/Program Files/MinGW/opt/include/" "D:/Program Files/MinGW/x86_64-w64-mingw32/include/")
