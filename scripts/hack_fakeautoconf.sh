@@ -3,12 +3,9 @@
 # Specifically for windows, where installing autoconf looks suspiciously
 # like boiling the ocean.
 
-N2N_VERSION_SHORT='happynet3.0.0'
-GIT_COMMITS=`git rev-list --count HEAD`
-
 sed \
-    -e "s%@N2N_VERSION_SHORT@%N2N_VERSION_SHORT%g" \
-    -e "s%@GIT_COMMITS@%$GIT_COMMITS%g" \
+    -e "s%@N2N_VERSION_SHORT@%FIXME%g" \
+    -e "s%@GIT_COMMITS@%FIXME%g" \
     -e "s%@CC@%gcc%g" \
     -e "s%@AR@%ar%g" \
     -e "s%@CFLAGS@%$CFLAGS%g" \
@@ -21,7 +18,7 @@ sed \
     < tools/Makefile.in > tools/Makefile
 
 cat <<EOF >include/config.h
-#define PACKAGE_VERSION "$N2N_VERSION_SHORT"
-#define PACKAGE_OSNAME "Windows"
-#define GIT_RELEASE "${N2N_VERSION_SHORT}.r${GIT_COMMITS}"
+#define PACKAGE_VERSION "FIXME"
+#define PACKAGE_OSNAME "FIXME"
+#define GIT_RELEASE "FIXME"
 EOF
