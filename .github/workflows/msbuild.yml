@@ -95,13 +95,14 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          echo 'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_CXX_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_C_FLAGS_RELEASE "/MT")' >> ../CMakeLists.txt
-          echo 'set(CMAKE_C_FLAGS_DEBUG "/MTd")' >> ../CMakeLists.txt
-          cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. -B .
+          echo 'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' >> toolChain.cmake
+          echo 'set(CMAKE_CXX_FLAGS_DEBUG "/MTd")' >> toolChain.cmake
+          echo 'set(CMAKE_C_FLAGS_RELEASE "/MT")' >> toolChain.cmake
+          echo 'set(CMAKE_C_FLAGS_DEBUG "/MTd")' >> toolChain.cmake
+          cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. -DCMAKE_TOOLCHAIN_FILE=./toolChain.cmake -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe supernode.vcxproj /t:Build /p:Configuration=Release
+          MSBuild.exe n2n-benchmark.vcxproj /t:Build /p:Configuration=Release
 
       - name: Create binary dir
         run: |
