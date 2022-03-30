@@ -29,7 +29,7 @@ jobs:
       - name: Make the makefiles
         run: |
           ./autogen.sh
-          ./configure LDFLAGS="-static"
+          ./configure
 
       - name: Install essential
         run: |
@@ -61,7 +61,7 @@ jobs:
       - name: generate a makefile and use it to install more packages
         run: |
           ./autogen.sh
-          ./configure LDFLAGS="-static"
+          ./configure
           make build-dep
         shell: bash
 
@@ -269,9 +269,9 @@ jobs:
           export CC=$HOST_TRIPLET-gcc
           export AR=$HOST_TRIPLET-ar
           ./autogen.sh
-          ./configure --host $HOST_TRIPLET LDFLAGS="-static"
+          ./configure --host $HOST_TRIPLET
           cd packages/debian/
-          ./configure EXTN=${{ matrix.arch }} LDFLAGS="-static"
+          ./configure EXTN=${{ matrix.arch }}
         # yamllint enable rule:line-length
 
       - name: Build
@@ -308,9 +308,8 @@ jobs:
         run: |
           ./autogen.sh
           ./configure
-          ./configure LDFLAGS="-static"
           cd packages/rpm/
-          ./configure LDFLAGS="-static"
+          ./configure
 
       - name: Build
         run: |
@@ -435,7 +434,7 @@ jobs:
           ./autogen.sh
           export CC=clang
           export CFLAGS="-arch x86_64 -arch arm64"
-          export LDFLAGS="-arch x86_64 -arch arm64 -static"
+          export LDFLAGS="-arch x86_64 -arch arm64"
           ./configure
           make
 
@@ -489,7 +488,6 @@ jobs:
           ./autogen.sh
           export CC=${{ matrix.arch }}-gcc
           export AR=${{ matrix.arch }}-ar
-          export LDFLAGS='-static'
           ./configure --host ${{ matrix.arch }}
           make
 
