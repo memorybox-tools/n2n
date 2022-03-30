@@ -435,7 +435,7 @@ jobs:
           ./autogen.sh
           export CC=clang
           export CFLAGS="-arch x86_64 -arch arm64"
-          export LDFLAGS="-arch x86_64 -arch arm64 -static"
+          export LDFLAGS="-arch x86_64 -arch arm64"
           ./configure
           make
 
