@@ -1,5 +1,5 @@
 /**
- * (C) 2007-21 - ntop.org and contributors
+ * (C) 2007-22 - ntop.org and contributors
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@
 #ifndef _N2N_TYPEDEFS_H_
 #define _N2N_TYPEDEFS_H_
 
+#include <stdint.h>     // for uint8_t and friends
+#ifndef WIN32
+#include <arpa/inet.h>  // for in_addr_t
+#endif
+#include <uthash.h>
+#include <n2n_define.h>
 
 typedef uint8_t  n2n_community_t[N2N_COMMUNITY_SIZE];
 typedef uint8_t  n2n_private_public_key_t[N2N_PRIVATE_PUBLIC_KEY_SIZE];
@@ -38,11 +44,6 @@ typedef unsigned int uint32_t;
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 
-/* sys/types.h typedefs (not present in Visual Studio) */
-typedef unsigned int u_int32_t;
-typedef unsigned short u_int16_t;
-typedef unsigned char u_int8_t;
-
 #ifndef __MINGW32__
 typedef int ssize_t;
 #endif
@@ -52,8 +53,6 @@ typedef unsigned long in_addr_t;
 #include "n2n_win32.h"
 
 #endif /* #if defined(_MSC_VER) || defined(__MINGW32__) */
-
-
 
 #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #include <machine/endian.h>
@@ -118,6 +117,7 @@ typedef unsigned long in_addr_t;
 #pragma pack(push,1)
 #endif
 
+#include <time.h>
 
 // those are definitely not typedefs (with a view to the filename) but neither are they defines
 static const n2n_mac_t broadcast_mac      = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -139,45 +139,45 @@ typedef struct ether_hdr ether_hdr_t;
 
 struct n2n_iphdr {
 #if defined(__LITTLE_ENDIAN__)
-        u_int8_t ihl:4, version:4;
+        uint8_t ihl:4, version:4;
 #elif defined(__BIG_ENDIAN__)
-        u_int8_t version:4, ihl:4;
+        uint8_t version:4, ihl:4;
 #else
 # error "Byte order must be defined"
 #endif
-        u_int8_t tos;
-        u_int16_t tot_len;
-        u_int16_t id;
-        u_int16_t frag_off;
-        u_int8_t ttl;
-        u_int8_t protocol;
-        u_int16_t check;
-        u_int32_t saddr;
-        u_int32_t daddr;
+        uint8_t tos;
+        uint16_t tot_len;
+        uint16_t id;
+        uint16_t frag_off;
+        uint8_t ttl;
+        uint8_t protocol;
+        uint16_t check;
+        uint32_t saddr;
+        uint32_t daddr;
 } PACK_STRUCT;
 
 struct n2n_tcphdr {
-    u_int16_t source;
-    u_int16_t dest;
-    u_int32_t seq;
-    u_int32_t ack_seq;
+    uint16_t source;
+    uint16_t dest;
+    uint32_t seq;
+    uint32_t ack_seq;
 #if defined(__LITTLE_ENDIAN__)
-    u_int16_t res1:4, doff:4, fin:1, syn:1, rst:1, psh:1, ack:1, urg:1, ece:1, cwr:1;
+    uint16_t res1:4, doff:4, fin:1, syn:1, rst:1, psh:1, ack:1, urg:1, ece:1, cwr:1;
 #elif defined(__BIG_ENDIAN__)
-    u_int16_t doff:4, res1:4, cwr:1, ece:1, urg:1, ack:1, psh:1, rst:1, syn:1, fin:1;
+    uint16_t doff:4, res1:4, cwr:1, ece:1, urg:1, ack:1, psh:1, rst:1, syn:1, fin:1;
 #else
 # error "Byte order must be defined"
 #endif
-    u_int16_t window;
-    u_int16_t check;
-    u_int16_t urg_ptr;
+    uint16_t window;
+    uint16_t check;
+    uint16_t urg_ptr;
 } PACK_STRUCT;
 
 struct n2n_udphdr {
-    u_int16_t source;
-    u_int16_t dest;
-    u_int16_t len;
-    u_int16_t check;
+    uint16_t source;
+    uint16_t dest;
+    uint16_t len;
+    uint16_t check;
 } PACK_STRUCT;
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
@@ -213,6 +213,21 @@ typedef struct filter_rule {
 } filter_rule_t;
 
 
+/** Uncomment this to enable the MTU check, then try to ssh to generate a fragmented packet. */
+/** NOTE: see doc/MTU.md for an explanation on the 1400 value */
+//#define MTU_ASSERT_VALUE 1400
+
+/** Common type used to hold stringified IP addresses. */
+typedef char ipstr_t[INET_ADDRSTRLEN];
+
+/** Common type used to hold stringified MAC addresses. */
+#define N2N_MACSTR_SIZE 32
+typedef char macstr_t[N2N_MACSTR_SIZE];
+typedef char dec_ip_str_t[N2N_NETMASK_STR_SIZE];
+typedef char dec_ip_bit_str_t[N2N_NETMASK_STR_SIZE + 4];
+typedef char devstr_t[N2N_IFNAMSIZ];
+
+
 #ifndef WIN32
 typedef struct tuntap_dev {
     int                  fd;
@@ -221,24 +236,12 @@ typedef struct tuntap_dev {
     uint32_t             ip_addr;
     uint32_t             device_mask;
     uint16_t             mtu;
-    char                 dev_name[N2N_IFNAMSIZ];
+    devstr_t             dev_name;
 } tuntap_dev;
 
 #define SOCKET int
 #endif /* #ifndef WIN32 */
 
-/** Uncomment this to enable the MTU check, then try to ssh to generate a fragmented packet. */
-/** NOTE: see doc/MTU.md for an explanation on the 1400 value */
-//#define MTU_ASSERT_VALUE 1400
-
-/** Common type used to hold stringified IP addresses. */
-typedef char ipstr_t[32];
-
-/** Common type used to hold stringified MAC addresses. */
-#define N2N_MACSTR_SIZE 32
-typedef char macstr_t[N2N_MACSTR_SIZE];
-typedef char dec_ip_str_t[N2N_NETMASK_STR_SIZE];
-typedef char dec_ip_bit_str_t[N2N_NETMASK_STR_SIZE + 4];
 
 typedef struct speck_context_t he_context_t;
 typedef char n2n_sn_name_t[N2N_EDGE_SN_HOST_SIZE];
@@ -461,12 +464,6 @@ struct peer_info {
 
 typedef struct peer_info peer_info_t;
 
-typedef struct n2n_route {
-    in_addr_t    net_addr;
-    uint8_t      net_bitlen;
-    in_addr_t    gateway;
-} n2n_route_t;
-
 typedef struct n2n_edge n2n_edge_t;
 
 /* *************************************************** */
@@ -551,7 +548,7 @@ typedef struct n2n_edge_callbacks {
 } n2n_edge_callbacks_t;
 
 typedef struct n2n_tuntap_priv_config {
-    char            tuntap_dev_name[N2N_IFNAMSIZ];
+    devstr_t        tuntap_dev_name;
     char            ip_mode[N2N_IF_MODE_SIZE];
     dec_ip_str_t    ip_addr;
     dec_ip_str_t    netmask;
@@ -639,7 +636,6 @@ typedef struct n2n_resolve_parameter {
 
 typedef struct n2n_edge_conf {
     struct peer_info         *supernodes;            /**< List of supernodes */
-    n2n_route_t              *routes;                /**< Networks to route through n2n */
     n2n_community_t          community_name;         /**< The community. 16 full octets. */
     n2n_desc_t               dev_desc;               /**< The device description (hint) */
     n2n_private_public_key_t *public_key;            /**< edge's public key (for user/password based authentication) */
@@ -653,7 +649,6 @@ typedef struct n2n_edge_conf {
     he_context_t             *header_iv_ctx_dynamic; /**< Header IV ecnryption cipher context, REMOVE as soon as separate fileds for checksum and replay protection available */
     n2n_transform_t          transop_id;             /**< The transop to use. */
     uint8_t                  compression;            /**< Compress outgoing data packets before encryption */
-    uint16_t                 num_routes;             /**< Number of routes in routes */
     uint8_t                  tuntap_ip_mode;         /**< Interface IP address allocated mode, eg. DHCP. */
     uint8_t                  allow_routing;          /**< Accept packet no to interface address. */
     uint8_t                  drop_multicast;         /**< Multicast ethernet addresses. */
@@ -664,7 +659,7 @@ typedef struct n2n_edge_conf {
     char                     *encrypt_key;
     int                      register_interval;      /**< Interval for supernode registration, also used for UDP NAT hole punching. */
     int                      register_ttl;           /**< TTL for registration packet when UDP NAT hole punching through supernode. */
-    in_addr_t                bind_address;           /**< The address to bind to if provided (-b) */
+    in_addr_t                bind_address;           /**< The address to bind to if provided */
     n2n_sock_t               preferred_sock;         /**< propagated local sock for better p2p in LAN (-e) */
     uint8_t                  preferred_sock_auto;    /**< indicates desired auto detect for preferred sock */
     int                      local_port;
@@ -699,7 +694,10 @@ struct n2n_edge {
     size_t                           sup_attempts;                       /**< Number of remaining attempts to this supernode. */
     tuntap_dev                       device;                             /**< All about the TUNTAP device */
     n2n_trans_op_t                   transop;                            /**< The transop to use when encoding */
-    n2n_route_t                      *sn_route_to_clean;                 /**< Supernode route to clean */
+    n2n_trans_op_t                   transop_lzo;                        /**< The transop for LZO  compression */
+#ifdef HAVE_ZSTD
+    n2n_trans_op_t                   transop_zstd;                       /**< The transop for ZSTD compression */
+#endif
     n2n_edge_callbacks_t cb;                                             /**< API callbacks */
     void                             *user_data;                         /**< Can hold user data */
     SN_SELECTION_CRITERION_DATA_TYPE sn_selection_criterion_common_data;
@@ -815,6 +813,7 @@ typedef struct n2n_sn {
     sn_stats_t                             stats;
     int                                    daemon;          /* If non-zero then daemonise. */
     n2n_mac_t                              mac_addr;
+    in_addr_t                              bind_address;    /* The address to bind to if provided */
     uint16_t                               lport;           /* Local UDP port to bind to. */
     uint16_t                               mport;           /* Management UDP port to bind to. */
     int                                    sock;            /* Main socket for UDP traffic with edges. */
