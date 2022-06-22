@@ -344,8 +344,8 @@ jobs:
           ./configure --host $HOST_TRIPLET \
                       --enable-miniupnp \
                       --enable-natpmp \
-                      --enable-libcap \
-                      --enable-libpcap \
+                      --enable-cap \
+                      --enable-pcap \
                       --enable-pthread  \
                       --with-zstd
 
@@ -392,8 +392,8 @@ jobs:
           ./autogen.sh
           ./configure --enable-miniupnp \
                       --enable-natpmp \
-                      --enable-libcap \
-                      --enable-libpcap \
+                      --enable-cap \
+                      --enable-pcap \
                       --enable-pthread  \
                       --with-zstd
           cd packages/rpm/
