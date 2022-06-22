@@ -326,7 +326,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install debhelper build-essential \
             crossbuild-essential-${{ matrix.arch }} \
-            libzstd-dev \
             libminiupnpc-dev \
             libnatpmp-dev \
             libcap-dev \
@@ -347,8 +346,7 @@ jobs:
                       --enable-natpmp \
                       --enable-cap \
                       --enable-pcap \
-                      --enable-pthread  \
-                      --with-zstd
+                      --enable-pthread
 
           cd packages/debian/
           ./configure EXTN=${{ matrix.arch }}
@@ -383,7 +381,6 @@ jobs:
       - name: Install packages needed for build
         run: |
           sudo apt-get install -y rpm \
-            libzstd-dev \
             libminiupnpc-dev \
             libnatpmp-dev \
             libcap-dev \
@@ -396,8 +393,7 @@ jobs:
                       --enable-natpmp \
                       --enable-cap \
                       --enable-pcap \
-                      --enable-pthread  \
-                      --with-zstd
+                      --enable-pthread
           cd packages/rpm/
           ./configure
 
