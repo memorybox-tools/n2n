@@ -1,5 +1,5 @@
 ---
-name: Testing
+name: static_link
 
 # yamllint disable-line rule:truthy
 on:
