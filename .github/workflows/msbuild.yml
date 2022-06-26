@@ -43,11 +43,11 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' \
+          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' `
                  ../CMakeLists.txt
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' \
+          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' `
                  ../CMakeLists.txt
-          cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S .. \
+          cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S .. `
                                               -DN2N_OPTION_USE_PORTMAPPING=ON -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe supernode.vcxproj /t:Build /p:Configuration=Release
@@ -100,11 +100,11 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' \
+          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' `
                 ../CMakeLists.txt
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' \
+          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' `
                 ../CMakeLists.txt
-          cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. \
+          cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. `
                                               -DN2N_OPTION_USE_PORTMAPPING=ON -B .
           MSBuild.exe edge.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe supernode.vcxproj /t:Build /p:Configuration=Release
