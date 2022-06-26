@@ -326,6 +326,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install debhelper build-essential \
             crossbuild-essential-${{ matrix.arch }}
+          sudo apt-get install -y libminiupnpc-dev \
+            libnatpmp-dev \
+            libcap-dev \
+            libpcap-dev
 
 
       - name: Configure
@@ -336,10 +340,6 @@ jobs:
           HOST_TRIPLET=$(dpkg-architecture -a${{ matrix.arch }} -q DEB_HOST_GNU_TYPE)
           export CC=$HOST_TRIPLET-gcc
           export AR=$HOST_TRIPLET-ar
-          sudo apt-get install -y libminiupnpc-dev \
-            libnatpmp-dev \
-            libcap-dev \
-            libpcap-dev
 
           ./autogen.sh
           ./configure --host $HOST_TRIPLET \
@@ -382,13 +382,13 @@ jobs:
       - name: Install packages needed for build
         run: |
           sudo apt-get install -y rpm
-
-      - name: Configure
-        run: |
           sudo apt-get install -y libminiupnpc-dev \
             libnatpmp-dev \
             libcap-dev \
             libpcap-dev
+
+      - name: Configure
+        run: |
 
           ./autogen.sh
           ./configure --enable-miniupnp \
