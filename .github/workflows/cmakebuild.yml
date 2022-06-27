@@ -163,14 +163,16 @@ jobs:
       - name: Create binary dir
         shell: bash
         run: |
+          VER_FILE_SHORT=$(cat "./VERSION")
           cd ${{ matrix.arch }}
-          make install DESTDIR=../binaries/linux_${{ matrix.arch }}
+          make install DESTDIR=../linux_${{ matrix.arch }}/$VER_FILE_SHORT
+          cp n2n-* ../linux_${{ matrix.arch }}/$VER_FILE_SHORT/usr/local/bin/
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: binaries
-          path: binaries
+          name: linux_${{ matrix.arch }}
+          path: linux_${{ matrix.arch }}
 
 
   # Given the clearly documented use of annotated tags to signal releases,
