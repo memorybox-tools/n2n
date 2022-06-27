@@ -56,6 +56,11 @@ jobs:
 
           mv Release $VER_FILE_SHORT
 
+      - name: Create binary dir
+        run: |
+          mkdir -p windows_${{ matrix.arch }}
+          cp -r ${{ matrix.arch }}/* windows_${{ matrix.arch }}
+
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -110,6 +115,11 @@ jobs:
           MSBuild.exe n2n-benchmark.vcxproj /t:Build /p:Configuration=Release
 
           mv Release $VER_FILE_SHORT
+
+      - name: Create binary dir
+        run: |
+          mkdir -p windows_${{ matrix.arch }}
+          cp -r ${{ matrix.arch }}/* windows_${{ matrix.arch }}
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
