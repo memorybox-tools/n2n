@@ -54,15 +54,17 @@ jobs:
           MSBuild.exe n2n-benchmark.vcxproj /t:Build /p:Configuration=Release
 
           $VER_FILE_SHORT=Get-Content .\VERSION
-          mkdir -p windows_${{ matrix.arch }}_$VER_FILE_SHORT
-          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          $RELEASE_DIR = "windows_" + ${{ matrix.arch }} + $VER_FILE_SHORT
+          mkdir -p $RELEASE_DIR
+          cp -r ${{ matrix.arch }}/Release $RELEASE_DIR
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
           $VER_FILE_SHORT=Get-Content .\VERSION
-          name: windows_${{ matrix.arch }}_$VER_FILE_SHORT
-          path: windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          $RELEASE_DIR = "windows_" + ${{ matrix.arch }} + $VER_FILE_SHORT
+          name: $RELEASE_DIR
+          path: $RELEASE_DIR
 
 
   binaries_windows_x86:
@@ -113,15 +115,17 @@ jobs:
       - name: Create binary dir
         run: |
           $VER_FILE_SHORT=Get-Content .\VERSION
-          mkdir -p windows_${{ matrix.arch }}_$VER_FILE_SHORT
-          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          $RELEASE_DIR = "windows_" + ${{ matrix.arch }} + $VER_FILE_SHORT
+          mkdir -p $RELEASE_DIR
+          cp -r ${{ matrix.arch }}/Release $RELEASE_DIR
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
           $VER_FILE_SHORT=Get-Content .\VERSION
-          name: windows_${{ matrix.arch }}_$VER_FILE_SHORT
-          path: windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          $RELEASE_DIR = "windows_" + ${{ matrix.arch }} + $VER_FILE_SHORT
+          name: $RELEASE_DIR
+          path: $RELEASE_DIR
 
 
   # Given the clearly documented use of annotated tags to signal releases,
