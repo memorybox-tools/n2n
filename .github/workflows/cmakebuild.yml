@@ -138,8 +138,8 @@ jobs:
       - name: Fix Checkout
         run: |
           git fetch --force --tags
-          git sumodule init
-          git sumodule update
+          git submodule init
+          git submodule update
 
       - name: Install dependency
         run: |
