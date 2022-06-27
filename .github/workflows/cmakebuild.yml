@@ -123,6 +123,55 @@ jobs:
           name: windows_${{ matrix.arch }}
           path: windows_${{ matrix.arch }}
 
+  binaries_linux_x64:
+    name: Binaries for linux
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: true
+      matrix:
+        arch:
+          arch: x64
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Fix Checkout
+        run: |
+          git fetch --force --tags
+          git sumodule init
+          git sumodule update
+
+      - name: Install dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake \
+                       libpcap-dev libcap-dev
+
+      - name: Configure and Build
+        shell: bash
+        run: |
+          mkdir ${{ matrix.arch }}
+          cd ${{ matrix.arch }}
+          echo "set(CMAKE_SYSTEM_NAME Linux)" >>  toolChain.cmake
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=./toolChain.cmake \
+                   -DN2N_OPTION_USE_PORTMAPPING=ON \
+                   -DN2N_OPTION_USE_PTHREAD=ON \
+                   -DN2N_OPTION_USE_CAPLIB=ON  \
+                   -DN2N_OPTION_USE_PCAPLIB=ON -B .
+          make
+
+      - name: Create binary dir
+        shell: bash
+        run: |
+          cd ${{ matrix.arch }}
+          make install DESTDIR=../binaries/linux_${{ matrix.arch }}
+
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: binaries
+
 
   # Given the clearly documented use of annotated tags to signal releases,
   # it seems strange that there is no simple way to trigger actions if the
