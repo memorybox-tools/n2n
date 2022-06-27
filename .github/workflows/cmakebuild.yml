@@ -44,11 +44,10 @@ jobs:
           $VER_FILE_SHORT=Get-Content .\VERSION
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' `
-                 ../CMakeLists.txt
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' `
-                 ../CMakeLists.txt
+          'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' | out-file .\toolChain.cmake -append
+          'set(CMAKE_C_FLAGS_RELEASE "/MT")' | out-file .\toolChain.cmake -append
           cmake.exe -G "Visual Studio 16 2019" -A ${{ matrix.arch }} -S .. `
+                                              -DCMAKE_TOOLCHAIN_FILE=./toolChain.cmake `
                                               -DN2N_OPTION_USE_PORTMAPPING=ON -B .
           MSBuild.exe ALL_BUILD.vcxproj /t:Build /p:Configuration=Release
 
@@ -77,7 +76,7 @@ jobs:
 
         include:
           # Prettier run names.
-          - {os: windows-2019, name: VS 2019}
+          - {os: windows-2019, name: VS 2017}
 
     defaults:
       run:
@@ -103,11 +102,10 @@ jobs:
           $VER_FILE_SHORT=Get-Content .\VERSION
           New-Item -ItemType "directory" -Path ${{ matrix.arch }} -Force
           cd ${{ matrix.arch }}
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_CXX_FLAGS_RELEASE "/MT")' `
-                ../CMakeLists.txt
-          sed -i '/if(DEFINED WIN32)/a\set(CMAKE_C_FLAGS_RELEASE "/MT")' `
-                ../CMakeLists.txt
-          cmake.exe -G "Visual Studio 16 2019" -A Win32 -S .. `
+          'set(CMAKE_CXX_FLAGS_RELEASE "/MT")' | out-file .\toolChain.cmake -append
+          'set(CMAKE_C_FLAGS_RELEASE "/MT")' | out-file .\toolChain.cmake -append
+          cmake.exe -G "Visual Studio 15 2017" -A Win32 -S .. `
+                                              -DCMAKE_TOOLCHAIN_FILE=./toolChain.cmake `
                                               -DN2N_OPTION_USE_PORTMAPPING=ON -B .
           MSBuild.exe ALL_BUILD.vcxproj /t:Build /p:Configuration=Release
 
