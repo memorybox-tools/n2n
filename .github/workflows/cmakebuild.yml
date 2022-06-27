@@ -1,5 +1,5 @@
 ---
-name: msbuild
+name: cmakebuild
 
 # yamllint disable-line rule:truthy
 on:
@@ -53,16 +53,16 @@ jobs:
           MSBuild.exe supernode.vcxproj /t:Build /p:Configuration=Release
           MSBuild.exe n2n-benchmark.vcxproj /t:Build /p:Configuration=Release
 
-      - name: Create binary dir
-        run: |
-          mkdir -p windows_${{ matrix.arch }}
-          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}
+          $VER_FILE_SHORT=Get-Content .\VERSION
+          mkdir -p windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}_$VER_FILE_SHORT
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: windows_${{ matrix.arch }}
-          path: windows_${{ matrix.arch }}
+          $VER_FILE_SHORT=Get-Content .\VERSION
+          name: windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          path: windows_${{ matrix.arch }}_$VER_FILE_SHORT
 
 
   binaries_windows_x86:
@@ -112,14 +112,16 @@ jobs:
 
       - name: Create binary dir
         run: |
-          mkdir -p windows_${{ matrix.arch }}
-          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}
+          $VER_FILE_SHORT=Get-Content .\VERSION
+          mkdir -p windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          cp -r ${{ matrix.arch }}/Release windows_${{ matrix.arch }}_$VER_FILE_SHORT
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: windows_${{ matrix.arch }}
-          path: windows_${{ matrix.arch }}
+          $VER_FILE_SHORT=Get-Content .\VERSION
+          name: windows_${{ matrix.arch }}_$VER_FILE_SHORT
+          path: windows_${{ matrix.arch }}_$VER_FILE_SHORT
 
 
   # Given the clearly documented use of annotated tags to signal releases,
