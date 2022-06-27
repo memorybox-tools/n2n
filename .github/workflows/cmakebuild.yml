@@ -129,8 +129,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        arch:
-          arch: x64
+        arch: x64
 
     steps:
       - uses: actions/checkout@v2
