@@ -278,46 +278,46 @@ jobs:
           name: macos_1015_x64
           path: macos_1015_x64
 
-  binaries_macos_universal:
-    name: Binaries for MacOS (universal arch)
-    runs-on: macos-10.15
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Fix Checkout
-        run: |
-          git fetch --force --tags
-          git submodule init
-          git submodule update
-
-      - name: Install packages needed for build
-        run: |
-          brew install automake
-
-      - name: Configure and Build
-        shell: bash
-        run: |
-          # this is a hack! it assumes the default SDK is the 'right' one
-          export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-          ./autogen.sh
-          export CC=clang
-          export CFLAGS="-arch x86_64 -arch arm64"
-          export LDFLAGS="-arch x86_64 -arch arm64"
-          ./configure --enable-pthread
-          make
-
-      - name: Create binary dir
-        shell: bash
-        run: |
-          VER_FILE_SHORT=$(cat "./VERSION")
-          make install DESTDIR=macos_1015_darwin_universal/$VER_FILE_SHORT
-
-      - name: Upload binary artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: macos_1015_darwin_universal
-          path: macos_1015_darwin_universal
+#  binaries_macos_universal:
+#    name: Binaries for MacOS (universal arch)
+#    runs-on: macos-10.15
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Fix Checkout
+#        run: |
+#          git fetch --force --tags
+#          git submodule init
+#          git submodule update
+#
+#      - name: Install packages needed for build
+#        run: |
+#          brew install automake
+#
+#      - name: Configure and Build
+#        shell: bash
+#        run: |
+#          # this is a hack! it assumes the default SDK is the 'right' one
+#          export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+#          ./autogen.sh
+#          export CC=clang
+#          export CFLAGS="-arch x86_64 -arch arm64"
+#          export LDFLAGS="-arch x86_64 -arch arm64"
+#          ./configure --enable-pthread
+#          make
+#
+#      - name: Create binary dir
+#        shell: bash
+#        run: |
+#          VER_FILE_SHORT=$(cat "./VERSION")
+#          make install DESTDIR=macos_1015_darwin_universal/$VER_FILE_SHORT
+#
+#      - name: Upload binary artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: macos_1015_darwin_universal
+#          path: macos_1015_darwin_universal
 
   # Given the clearly documented use of annotated tags to signal releases,
   # it seems strange that there is no simple way to trigger actions if the
