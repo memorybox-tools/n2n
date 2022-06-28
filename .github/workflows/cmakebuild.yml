@@ -233,8 +233,8 @@ jobs:
           path: linux_${{ matrix.arch }}
 
 
-  binaries_macos_universal:
-    name: Binaries for MacOS (universal arch)
+  binaries_macos_x64:
+    name: Binaries for MacOS (x64 arch)
     runs-on: macos-10.15
 
     steps:
@@ -248,31 +248,35 @@ jobs:
 
       - name: Install packages needed for build
         run: |
-          brew install automake \
-                       libpcap miniupnpc 
+          brew install automake cmake
 
       - name: Configure and Build
         shell: bash
         run: |
           # this is a hack! it assumes the default SDK is the 'right' one
           export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-          ./autogen.sh
-          export CC=clang
-          export CFLAGS="-arch x86_64 -arch arm64"
-          export LDFLAGS="-arch x86_64 -arch arm64"
-          ./configure --enable-pthread --enable-cap --enable-pcap --enable-natpmp --enable-miniupnp
+          mkdir build_x64
+          cd build_x64
+          cmake ../ -DN2N_OPTION_USE_PORTMAPPING=ON \
+                    -DN2N_OPTION_USE_PTHREAD=ON \
+                    -DN2N_OPTION_USE_PCAPLIB=ON -B .
           make
 
       - name: Create binary dir
         shell: bash
         run: |
-          make install DESTDIR=macos_1015/universal-apple-darwin
+          VER_FILE_SHORT=$(cat "./VERSION")
+          cd build_x64
+          find . -name *bin*|xargs -I@ find @ -type f|xargs chmod +x
+          make install DESTDIR=../macos_1015_x64/$VER_FILE_SHORT
+          cp n2n-* ../macos_1015_x64/$VER_FILE_SHORT/usr/local/bin/
+
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: macos_1015
-          path: macos_1015
+          name: macos_1015_x64
+          path: macos_1015_x64
 
 
   # Given the clearly documented use of annotated tags to signal releases,
